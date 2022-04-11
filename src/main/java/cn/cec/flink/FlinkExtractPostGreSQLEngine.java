@@ -11,12 +11,15 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
  *
  */
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class FlinkExtractPostGreSQLEngine {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(FlinkExtractPostGreSQLEngine.class);
+
     public static void main( String[] args ) throws Exception {
-        log.info("==========>开始flink程序抽取postGreSQL数据");
+        LOGGER.info("==========>开始flink程序抽取postGreSQL数据");
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         final ParameterTool params = ParameterCheck.parameterCheck(args);
         env.getConfig().setGlobalJobParameters(params);

@@ -1,0 +1,57 @@
+{
+  "data": [
+    {
+      "arrive_dt": 1644905634453,
+      "birthday": -374779687833,
+      "cardno": "320422195709293312",
+      "cardtype": "01",
+      "chk_desc": "指骨正侧位",
+      "chk_doc_idcard": "",
+      "chk_doc_name": "傅银生",
+      "chk_dpt_code": "",
+      "chk_dpt_name": "医学影像科",
+      "chk_dt": 1644905634453,
+      "chk_methodname": "",
+      "chk_modality": "CR",
+      "chk_status": 10,
+      "ckpt_name": "指骨正侧位",
+      "dev_name": "",
+      "dev_room": "",
+      "disable_flag": 0,
+      "ename": "",
+      "hash_id": "StudyPo_e3aa2a20a01047d77e545eabde9bf640",
+      "hos_proj_no": "",
+      "idcard_hos": "",
+      "idcard_hos_type": "2",
+      "img_count": 0,
+      "mobile": "13222555228",
+      "name": "钱云大",
+      "op_em_hp_ex_mark": 1,
+      "op_em_hp_ex_no": "2022021500133",
+      "organ_code": "12320482467502215Y",
+      "organ_name": "常州市金坛区指前镇卫生院",
+      "patient_idcard": "320422195709293312",
+      "proj_name": "",
+      "proj_no": "",
+      "reg_doc_idcard": "",
+      "reg_doc_name": "傅银生",
+      "reg_dt": 1644905634453,
+      "ris_study_id": "1152674",
+      "sex": 1,
+      "system_id": "czsjtqzqzwsy",
+      "system_patient_id": "0000617898",
+      "update_time": 1644905574560
+    }
+  ],
+  "dataType": "examInfo",
+  "index_fields": [
+    "organ_code",
+    "ris_study_id",
+    "system_id"
+  ],
+  "link_fields": [
+    "organ_code",
+    "ris_study_id",
+    "system_id"
+  ]
+}
