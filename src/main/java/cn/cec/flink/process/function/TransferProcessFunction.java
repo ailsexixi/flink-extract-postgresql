@@ -2,6 +2,7 @@ package cn.cec.flink.process.function;
 
 import cn.cec.flink.model.KafkaModel;
 import cn.cec.flink.model.PostGreSQLModel;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -24,7 +25,17 @@ public class TransferProcessFunction extends KeyedProcessFunction<String,PostGre
 
     @Override
     public void processElement(PostGreSQLModel postGreSQLModel, Context context, Collector<String> collector) throws Exception {
-        String jsonValue = mapper.writeValueAsString(postGreSQLModel);
-        collector.collect(jsonValue);
+        String dataValue = mapper.writeValueAsString(postGreSQLModel.getData());
+        StringBuilder jsonValue = new StringBuilder("{");
+        jsonValue.append("\"data\":\"")
+            .append(dataValue).append("\",")
+            .append("\"dataType\":\"")
+            .append(postGreSQLModel.getDataType()).append("\",")
+            .append("\"index_fields\":")
+            .append(Arrays.toString(postGreSQLModel.getIndex_fields())).append(",")
+            .append("\"link_fields\":")
+            .append(Arrays.toString(postGreSQLModel.getLink_fields())).append("}");
+
+        collector.collect(jsonValue.toString());
     }
 }

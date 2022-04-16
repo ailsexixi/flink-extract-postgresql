@@ -23,7 +23,7 @@ public class FlinkExtractCore {
         ParameterTool parameterTools = (ParameterTool)env.getConfig().getGlobalJobParameters();
         DataStreamSource<PostGreSQLModel> postGreSQLModelDataStreamSource = env.addSource(new PostGreSQLSource());
         postGreSQLModelDataStreamSource
-                .keyBy(PostGreSQLModel::getId)
+                .keyBy(PostGreSQLModel::getDataType)
                 .process(new TransferProcessFunction())
                 .addSink(new CustomerKafkaSink(parameterTools).producer());
     }

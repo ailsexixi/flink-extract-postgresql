@@ -14,10 +14,10 @@ public class ParameterCheck {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlinkExtractCore.class);
 
-    public static ParameterTool parameterCheck(String[] args) {
+    public static ParameterTool parameterCheck(String[] args) throws ValidationException {
 
         if (args.length == 0) {
-            new ValidationException("参数列表为空,请输入正确参数列表.");
+            throw new ValidationException("参数列表为空,请输入正确参数列表.");
         }
 
         ParameterTool params = ParameterTool.fromArgs(args);
