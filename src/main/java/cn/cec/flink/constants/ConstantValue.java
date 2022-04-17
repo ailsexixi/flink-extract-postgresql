@@ -48,12 +48,6 @@ public class ConstantValue {
         + "where ris_examinfo.update_time > ? and ris_examinfo.update_time < ?";
 
     public static final String KINGSOFT_SQL = "select ore.*, odp.*"
-//          + "odp.study_status_id, odp.hospital_code, odp.study_instance_uid, "
-//        + "odp.series_instance_uid, odp.series_number, "
-//        + "odp.patient_name, odp.patient_id, "
-//        + "odp.patient_id, odp.other_patient_ids, "
-//        + "odp.other_patient_names, odp.patient_birth_date, "
-//        + "odp.patient_birth_time, odp.patient_sex"
           + "ofu.file_type, ofu.bucket, ofu.file_path "
           + "from ods_ris_exam_info ore "
           + "join ods_dicom_parse_info odp on ore.study_request_no = odp.study_request_no "
@@ -77,12 +71,12 @@ public class ConstantValue {
             "ris_study_id"};
 
         public static final String REPORT_DATATYPE = "reportInfo";
-        public static final String[] REPORT_LINKFIELDS = {"organ_code","system_id","ris_study_id"};
-        public static final String[] REPORT_INDEXFIELDS = {"organ_code","system_id","ris_study_id","result_id"};
+        public static final String[] REPORT_LINKFIELDS = {"organ_code", "system_id", "ris_study_id"};
+        public static final String[] REPORT_INDEXFIELDS = {"organ_code", "system_id", "ris_study_id", "result_id"};
 
         public static final String SERIES_DATATYPE = "dataType";
-        public static final String[] SERIES_LINKFIELDS = {"organ_code","system_id","ris_study_id"};
-        public static final String[] SERIES_INDEXFIELDS = {"organ_code","system_id","ris_study_id","pacs_series_id"};
+        public static final String[] SERIES_LINKFIELDS = {"organ_code", "system_id", "ris_study_id"};
+        public static final String[] SERIES_INDEXFIELDS = {"organ_code", "system_id", "ris_study_id", "pacs_series_id"};
     }
 
 }

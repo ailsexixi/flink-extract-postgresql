@@ -9,7 +9,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonPro
  * @Date 20220414$
  * @Version 1.0
  */
-public class ApplyInfoData extends BaseData{
+public class ApplyInfoData extends BaseData {
 
   @JsonProperty("ris_study_ids")
   @JsonAlias(value = {"ris_study_ids"})
@@ -17,7 +17,7 @@ public class ApplyInfoData extends BaseData{
 
   @JsonProperty("exam_id")
   @JsonAlias(value = {"id"})
-  private String ExamId;
+  private String examId;
 
   @JsonProperty("rpt_no")
   @JsonAlias(value = {"lab_num", "study_request_no"})
@@ -41,10 +41,10 @@ public class ApplyInfoData extends BaseData{
 
   @JsonProperty("proj_name")
   @JsonAlias(value = {" item_name"})
-  private String  proj_name;
+  private String  projName;
 
   @JsonProperty("ckpt_name")
-  @JsonAlias(value = {"category_name","study_body_part"})
+  @JsonAlias(value = {"category_name", "study_body_part"})
   private String  ckptName;
 
   @JsonProperty("chk_methodname")
@@ -176,11 +176,11 @@ public class ApplyInfoData extends BaseData{
   }
 
   public String getExamId() {
-    return ExamId;
+    return examId;
   }
 
   public void setExamId(String examId) {
-    ExamId = examId;
+    this.examId = examId;
   }
 
   public String getRptNo() {
@@ -223,12 +223,12 @@ public class ApplyInfoData extends BaseData{
     this.hosProjNo = hosProjNo;
   }
 
-  public String getProj_name() {
-    return proj_name;
+  public String getProjName() {
+    return projName;
   }
 
-  public void setProj_name(String proj_name) {
-    this.proj_name = proj_name;
+  public void setProj_name(String projName) {
+    this.projName = projName;
   }
 
   public String getCkptName() {

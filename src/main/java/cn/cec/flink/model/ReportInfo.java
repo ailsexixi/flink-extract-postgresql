@@ -9,7 +9,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonPro
  * @Date 202200417$
  * @Version 1.0
  */
-public class ReportInfo extends BaseData{
+public class ReportInfo extends BaseData {
 
   @JsonProperty("result_id")
   @JsonAlias(value = {"record_num", "report_uid"})

@@ -41,7 +41,7 @@ public class StudyInfoData extends BaseData {
 
   @JsonProperty("dev_room")
   @JsonAlias(value = {"study_room_number"})
-  private String dev_room;
+  private String devRoom;
 
   @JsonProperty("dev_name")
   @JsonAlias(value = {"study_equipment_name"})
@@ -89,7 +89,7 @@ public class StudyInfoData extends BaseData {
 
   @JsonProperty("pat_id")
   @JsonAlias(value = {"patient_id"})
-  private String system_patient_id;
+  private String systemPatientId;
 
   @JsonProperty("cardtype")
   @JsonAlias(value = {"cardtype"})
@@ -208,11 +208,11 @@ public class StudyInfoData extends BaseData {
   }
 
   public String getDev_room() {
-    return dev_room;
+    return devRoom;
   }
 
-  public void setDev_room(String dev_room) {
-    this.dev_room = dev_room;
+  public void setDev_room(String devRoom) {
+    this.devRoom = devRoom;
   }
 
   public String getDevName() {
@@ -304,11 +304,11 @@ public class StudyInfoData extends BaseData {
   }
 
   public String getSystem_patient_id() {
-    return system_patient_id;
+    return systemPatientId;
   }
 
-  public void setSystem_patient_id(String system_patient_id) {
-    this.system_patient_id = system_patient_id;
+  public void setSystem_patient_id(String systemPatientId) {
+    this.systemPatientId = systemPatientId;
   }
 
   public String getCardType() {

@@ -12,12 +12,17 @@ import cn.cec.flink.utils.JdbcOptions.JdbcConnectionOptionsBuilder;
 import cn.cec.flink.utils.SimpleJdbcConnectionProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.state.MapState;
@@ -31,23 +36,17 @@ import org.apache.flink.runtime.state.FunctionSnapshotContext;
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-
-
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  implements SourceFunction<PostGreSQLModel>,CheckpointedFunction {
+public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  implements
+    SourceFunction<PostGreSQLModel>, CheckpointedFunction {
 
     private static final Logger LOG = LoggerFactory.getLogger(PostGreSQLSource.class);
 
-    private final static String START_TIME="start_time";
+    private static final String START_TIME = "start_time";
 
-    private final static String END_TIME="end_time";
+    private static final String END_TIME = "end_time";
 
     private static JdbcOptions jdbcOptions;
 
@@ -63,11 +62,11 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
 
     private final List<PostGreSQLModel> postGreSQLModels = new ArrayList<>();
 
-    private final Map<String,String> extractTime=new HashMap<>();
+    private final Map<String, String> extractTime = new HashMap<>();
 
     private transient ListState<PostGreSQLModel> checkPointedState;
     //pg库抽取时间
-    private transient MapState<String,String> extractTimeState;
+    private transient MapState<String, String> extractTimeState;
 
     /**
     *@Description 初始化postgreSQL的链接池
@@ -97,13 +96,11 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
             .build();
         jdbcConnectionProvider = new SimpleJdbcConnectionProvider(jdbcOptions);
         connection = jdbcConnectionProvider.getConnection();
-//        Class.forName(parameterTool.get(ConstantValue.DRIVERNAME));
-//        connection = DriverManager.getConnection(parameterTool.get(ConstantValue.URL), parameterTool.get(ConstantValue.USERNAME), parameterTool.get(ConstantValue.PASSWORD));
 
         String sourceType = parameterTool.get(ConstantValue.SOURCE_TYPE);
-        sourceSql = sourceType.equalsIgnoreCase(ConstantValue.KINGSOFT) ?
-            ConstantValue.KINGSOFT_SQL : sourceType.equalsIgnoreCase(ConstantValue.KAYISOFT) ?
-            ConstantValue.KAYISOFT_SQL : null;
+        sourceSql = sourceType.equalsIgnoreCase(ConstantValue.KINGSOFT)
+            ? ConstantValue.KINGSOFT_SQL : sourceType.equalsIgnoreCase(ConstantValue.KAYISOFT)
+            ? ConstantValue.KAYISOFT_SQL : null;
         if (sourceSql == null) {
             throw new NullPointerException(String.format("请检查配置项 %s 是否配置正确, "
                 + "正确的值应为 : %s or %s", ConstantValue.SOURCE_TYPE, ConstantValue.KAYISOFT,
@@ -133,7 +130,7 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
                     dataJson.append("\"" + metaData.getColumnName(i) + "\":\""
                         + resultSet.getString(i) + "\",");
                 }
-                dataJson.deleteCharAt(dataJson.length() -1).append("}");
+                dataJson.deleteCharAt(dataJson.length() - 1).append("}");
                 String rowJson = dataJson.toString();
                 ObjectMapper mapper = new ObjectMapper();
 
@@ -185,7 +182,7 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
     public ResultSet excuteQuery() throws IOException {
         int i = 0;
 
-        while(i <= jdbcOptions.getMaxRetries()) {
+        while (i <= jdbcOptions.getMaxRetries()) {
             try {
                 statement.setString(1, START_TIME);
                 statement.setString(2, END_TIME);
@@ -276,15 +273,16 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
                         "postGreSQLModels-buffer",
                         TypeInformation.of(new TypeHint<PostGreSQLModel>() {
                         }));
-        MapStateDescriptor<String,String> extractorTimeStateDescriptor=new MapStateDescriptor<String,String>("extract-time-buffer", String.class,String.class);
+        MapStateDescriptor<String, String> extractorTimeStateDescriptor =
+            new MapStateDescriptor<>("extract-time-buffer", String.class, String.class);
         checkPointedState = context.getOperatorStateStore().getListState(descriptor);
-        extractTimeState=context.getKeyedStateStore().getMapState(extractorTimeStateDescriptor);
+        extractTimeState = context.getKeyedStateStore().getMapState(extractorTimeStateDescriptor);
         if (context.isRestored()) {
             //将checkpoint内时间状态重新赋值抽取时间点
             String startTime = extractTimeState.get(START_TIME);
-            String endTime=extractTimeState.get(END_TIME);
-            extractTime.put(START_TIME,startTime);
-            extractTime.put(END_TIME,endTime);
+            String endTime = extractTimeState.get(END_TIME);
+            extractTime.put(START_TIME, startTime);
+            extractTime.put(END_TIME, endTime);
             //checkpoint内pg值赋值
             for (PostGreSQLModel value : checkPointedState.get()) {
                 postGreSQLModels.add(value);
