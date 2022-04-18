@@ -184,8 +184,8 @@ public class PostGreSQLSource extends RichSourceFunction<PostGreSQLModel>  imple
 
         while (i <= jdbcOptions.getMaxRetries()) {
             try {
-                statement.setString(1, START_TIME);
-                statement.setString(2, END_TIME);
+                statement.setString(1, extractTime.get(START_TIME));
+                statement.setString(2, extractTime.get(END_TIME));
                 ResultSet resultSet = statement.executeQuery();
                 connection.commit();
                 return  resultSet;
