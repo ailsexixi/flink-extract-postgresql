@@ -23,8 +23,10 @@ public class CustomerKafkaSink {
     }
 
     public FlinkKafkaProducer<String> producer() {
-        return new FlinkKafkaProducer<>(
-                "my-topic",                  // target topic
+
+
+        return new FlinkKafkaProducer<String>(
+                topic,                  // target topic
                 (KafkaSerializationSchema<String>) new KafkaDynamicTopicSerialize(new SimpleStringSchema()),    // serialization schema
                 properties,                  // producer config
                 FlinkKafkaProducer.Semantic.EXACTLY_ONCE); // fault-tolerance

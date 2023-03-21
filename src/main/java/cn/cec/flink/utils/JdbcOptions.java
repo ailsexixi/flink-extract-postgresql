@@ -55,6 +55,7 @@ public class JdbcOptions implements Serializable {
   }
 
   public static class JdbcConnectionOptionsBuilder {
+//  public  class JdbcConnectionOptionsBuilder {
     private String url;
     private String driverName;
     private String username;

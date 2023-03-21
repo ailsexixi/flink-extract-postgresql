@@ -7,7 +7,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonPro
  * @Describe 对应json格式的封装类
    * json格式: {"dataType":"...","data":"...","link_fields":"...","index_fields":"..."}
  */
-public class PostGreSQLModel {
+public class    PostGreSQLModel {
 
     @JsonProperty("dataType")
     @JsonAlias(value = {"dataType"})

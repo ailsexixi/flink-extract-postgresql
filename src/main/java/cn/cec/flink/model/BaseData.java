@@ -19,9 +19,9 @@ public abstract class BaseData {
   @JsonAlias(value = {"hospital_name"})
   private String orgName;
 
-  @JsonProperty("organ_code")
-  @JsonAlias(value = {"hospital_name"})
-  private String systemId;
+//  @JsonProperty("organ_name")
+//  @JsonAlias(value = {"hospital_name"})
+//  private String systemId;
 
   @JsonProperty("ris_study_id")
   @JsonAlias(value = {"study_uid", "study_instance_uid"})
@@ -55,13 +55,13 @@ public abstract class BaseData {
     this.orgName = orgName;
   }
 
-  public String getSystemId() {
-    return systemId;
-  }
+//  public String getSystemId() {
+//    return systemId;
+//  }
 
-  public void setSystemId(String systemId) {
-    this.systemId = systemId;
-  }
+//  public void setSystemId(String systemId) {
+//    this.systemId = systemId;
+//  }
 
   public String getRisStudyId() {
     return risStudyId;
