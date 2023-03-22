@@ -1,7 +1,36 @@
 1.本项目重写了快照的初始化及恢复，将保存的数据抽取范围保存到checkpoint
+
 2. //transient是类型修饰符，只能用来修饰字段。在对象序列化的过程中，标记为transient的变量不会被序列化。
     //volatile也是变量修饰符，只能用来修饰变量。volatile修饰的成员变量在每次被线程访问时，都强迫从共享内存中重读该成员变量的值。
     // 而且，当成员变量发生变化时，强迫线程将变化值回写到共享内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个
+
 3.实现了发往不同kafka topic的需求
+
 4.本项目运用了很多json的注解，用于在对象和json字符串中互相转换
-5.
+
+5.ObjectMapper mapper = new ObjectMapper();
+  ApplyInfoData applyInfoData = mapper.readValue(rowJson, ApplyInfoData.class);
+  String dataValue = mapper.writeValueAsString(postGreSQLModel.getData());
+
+6.jdbcOptions = new JdbcConnectionOptionsBuilder()
+      .withUrl(parameterTool.get(ConstantValue.URL))
+      .withUsername(parameterTool.get(ConstantValue.USERNAME))
+      .withPassword(parameterTool.get(ConstantValue.PASSWORD))
+      .withDriverName(parameterTool.get(ConstantValue.DRIVERNAME))
+      .withMaxRetries(parameterTool.getInt(ConstantValue.MAXRETRIES, 5))
+      .build();
+  jdbcConnectionProvider = new SimpleJdbcConnectionProvider(jdbcOptions);
+  connection = jdbcConnectionProvider.getConnection();
+
+7.将查询的结果作为json字符串
+  ResultSet resultSet = excuteQuery();
+  ResultSetMetaData metaData = resultSet.getMetaData();
+  while (resultSet.next()) {
+      StringBuilder dataJson = new StringBuilder("{");
+      for (int i = 1; i < metaData.getColumnCount(); i++) {
+          dataJson.append("\"" + metaData.getColumnName(i) + "\":\""
+              + resultSet.getString(i) + "\",");
+      }
+  }
+
+8.参数args和application.properties可以通过ParameterTool.merger()合并属性
