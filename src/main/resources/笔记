@@ -34,3 +34,88 @@
   }
 
 8.参数args和application.properties可以通过ParameterTool.merger()合并属性
+
+9.flink run -m yarn-cluster参数
+
+  -m,–jobmanager : yarn-cluster集群
+  -p,并行度
+  -yd,–yarndetached : 后台
+  -yjm,–yarnjobManager : jobmanager的内存
+  -ytm,–yarntaskManager : taskmanager的内存
+  -yn,–yarncontainer : TaskManager的个数
+  -yid,–yarnapplicationId : job依附的applicationId
+  -ynm,–yarnname : application的名称
+  -ys,–yarnslots : 分配的slots个数
+  -yD <property=value>                 use value for given property
+  -yd ,在后台运行
+  -yj,--yarnjar <arg>                  Path to Flink jar file
+  -ynm,--yarnname <arg>                Set a custom name for the application
+
+  例：flink run -m yarn-cluster -m hadoop102:8088 -yd -yjm 1024m -ytm 1024m -ynm test -ys 1 -yn 4
+  flink run -d -m yarn-cluster -ynm com.xiaoe  -ys 3 -p 6 -yjm 2048 -ytm 10240 -yD containerized.heap-cutoff-ratio=0.1 -yD taskmanager.memory.off-heap=true \
+ -yD heartbeat.timeout=18000000 -c com.xxx /usr/local/flink/xxxx.jar
+
+ 10.flink run yarn-session 要先启动集群，所有任务都提交到这个session中，一个yarn session模式对应一个JobManager,并按照需求提交作业，同一个Session中可以提交多个Flink作业
+
+    启动集群：flink run yarn-session.sh -n 1 -jm 1024 -tm 1024
+    提交任务：bin/flink run -m vmhome10.com:43258 examples/batch/WordCount.jar，也可以在flink的web管理页面上提交
+    yarn-session的参数介绍
+      -n ： 指定TaskManager的数量；
+      -d: 以分离模式运行；
+      -id：指定yarn的任务ID；
+      -j:Flink jar文件的路径;
+      -jm：JobManager容器的内存（默认值：MB）;
+      -nl：为YARN应用程序指定YARN节点标签;
+      -nm:在YARN上为应用程序设置自定义名称;
+      -q:显示可用的YARN资源（内存，内核）;
+      -qu:指定YARN队列;
+      -s:指定TaskManager中slot的数量;
+      -st:以流模式启动Flink;
+      -tm:每个TaskManager容器的内存（默认值：MB）;
+      -z:命名空间，用于为高可用性模式创建Zookeeper子路径;
+
+11.版本变化
+  Per-Job-Cluster新老版本启动方法
+
+  独享集群，提交之后由yarn现启集群。
+
+  老版本（<=1.10）
+  flink run -m yarn-cluster -c xxx xxx.jar
+
+  新版本（>=1.11）
+  flink run -t yarn-per-job -c xxx xxx.jar
+
+  该模式下也可以指定--detached参数，指定了则一旦作业提交被yarn接受，客户端将停止。
+
+  Application应用模式，1.11 之后次才有的，类比 Per-Job-Cluster，也是独享集群
+
+
+    Per-Job-Cluster：
+    解析main方法是在提交节点的本地。
+
+    Application ：
+    解析main方法是在Master。
+
+    有啥参数可以使用-D来指定，不要使用Options for yarn-cluster mode:下的那些参数比如-ynm、-yjm、-ytm等，不生效，待研究
+    flink1.12后所有的yarn相关的参数通过-D进行指定
+    例：-D yarn.application.name=xxx 替代以前的 -ynm xxx
+    更多配置参考文档： https://ci.apache.org/projects/flink/flink-docs-release-1.12/deployment/config.html#yarn
+    bin/flink run \
+    -t yarn-per-job \
+    -d \
+    -p 5 \ 指定并行度
+    -Dyarn.application.name="flink-yarn-perjob" \
+    -Dyarn.application.queue=test \ 指定yarn队列
+    -Djobmanager.memory.process.size=1024mb \ 指定JM的总进程大小
+    -Dtaskmanager.memory.process.size=1024mb \ 指定每个TM的总进程大小
+    -Dtaskmanager.numberOfTaskSlots=2 \ 指定每个TM的slot数
+    -Dyarn.provided.lib.dirs="hdfs://myhdfs/remote-flink-dist-dir" \  //为了进一步节省提交应用程序 Jar 所需的带宽，可以预先将其上传到 HDFS，并指定指向 ./MyApplication.jar 的远程路径
+    -c com.atguigu.flink.tuning.UvDemo \
+    /opt/module/flink-1.13.1/myjar/flink-tuning-1.0-SNAPSHOT.jar 或者hdfs://myhdfs/jars/MyApplication.jar
+    参数列表：
+    https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/deployment/config/
+总结：
+在Session模式中，集群的生命周期与任务无关，可以在集群中同时提交多个任务，他们共享集群资源。
+Per job模式中，每个任务单独维护集群，可以做到更好的资源隔离，集群的生命周期与任务相同。
+在Application模式中，为每个应用创建一个集群，main方法会运行在集群中，避免客户端过大的压力。
+建议使用Application模式 yarn-cluster  -t yarn-application

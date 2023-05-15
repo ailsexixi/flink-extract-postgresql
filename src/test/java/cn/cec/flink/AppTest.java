@@ -8,6 +8,10 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.Deseriali
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 /**
  * Unit test for simple FlinkExtractPostGreSQLEngine.
  */
@@ -24,5 +28,21 @@ public class AppTest
         PostGreSQLModel postGreSQLModel=mapper.readValue(json,PostGreSQLModel.class);
         System.out.println(mapper.writeValueAsString(postGreSQLModel));
 
+    }
+
+    @Test
+    public void shouldAnswerWithTrue2() {
+
+        int[] arr = new int[5];
+        Integer a = new Integer(100);
+        Integer d = new Integer(100);
+        Integer b = 100;
+        int c = 100;
+        System.out.println(a == c);
+        System.out.println(b == c);
+        System.out.println(a == b);
+        ArrayList<Object> objects = new ArrayList<>();
+        LinkedList<Object> objects1 = new LinkedList<>();
+        HashSet<Object> objects2 = new HashSet<>();
     }
 }
